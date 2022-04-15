@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, InternalServerErrorException,BadRequestException } from '@nestjs/common';
 import { SignupCredentialsDto } from './dto/signup-credentials.dto';
 import * as Neode from 'neode';
 import * as bcrypt from 'bcrypt';
@@ -8,6 +8,7 @@ import UserSchema from './dto/user.model';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserInterface } from './interfaces/user.interfaces';
+import {ValidationError} from 'class-validator'
 
 @Injectable()
 export class AuthService {
@@ -32,13 +33,17 @@ export class AuthService {
         }catch{
             throw new InternalServerErrorException('Server Error')
         }
-
+        
         try {
             await this.neode.merge('User', { firstname,lastname,username,email,password: hashedPassword, id, isFirstAuth });
             const payload: JwtPayload = { id };
             const accessToken: string = this.jwtService.sign(payload);
             return { accessToken };
         } catch (err: unknown) {
+            console.log();
+            if(err instanceof ValidationError)
+                throw new BadRequestException(err.toString())
+            
             if(err instanceof Neo4jError){
                 if((err as Neo4jError).code === 'Neo.ClientError.Schema.ConstraintValidationFailed'){
                     let user:Neode.Node<UserInterface> = await this.neode.first('User','username',username)
