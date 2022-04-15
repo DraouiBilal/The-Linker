@@ -5,19 +5,22 @@ import * as bcrypt from 'bcrypt';
 import { UserInterface } from './interfaces/user.interfaces';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import UserSchema from './dto/user.model';
 @Injectable()
 export class AuthService {
     constructor(
         private jwtService: JwtService,
         @Inject('Connection') private readonly neode: Neode,
-    ) {}
+    ) {
+        neode.with({User:UserSchema})
+    }
     async login(loginCredentialsDTO:LoginCredentialsDTO){
         const { email, password } = loginCredentialsDTO
-        const userInstance = await this.neode.first('User','email',email);
+        const userInstance:Neode.Node<UserInterface> = await this.neode.first('User','email',email);
         if ( !userInstance ){
             throw new UnauthorizedException('Please check your login credentials');
         }
-        const user = userInstance as unknown as UserInterface;
+        const user = await userInstance.toJson()
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if ( !isPasswordValid ){
             throw new UnauthorizedException('Please check your login credentials');
