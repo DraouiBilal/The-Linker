@@ -33,7 +33,7 @@ const UserSchema: SchemaObject = {
     },
     isFirstAuth: {
         type: 'boolean',
-        default: false,
+        default: true,
     },
 };
 

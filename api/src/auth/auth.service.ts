@@ -44,8 +44,8 @@ export class AuthService {
                     let user:Neode.Node<UserInterface> = await this.neode.first('User','username',username)
                     if( user )
                         throw new ConflictException('Username already exists')
+                        
                     user = await this.neode.first('User','email',email)
-                     
                     if(user)    
                         throw new ConflictException('Email already exists')
                 }
