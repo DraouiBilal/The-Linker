@@ -16,6 +16,7 @@ const UserSchema: SchemaObject = {
     },
     username: {
         type: 'string',
+        unique: true,
         required: true,
     },
     email:{
