@@ -10,7 +10,8 @@ import UserSchema from './dto/user.model';
 export class AuthService {
     constructor(
         private jwtService: JwtService,
-        @Inject('Connection') private readonly neode: Neode,
+        @Inject('Connection') 
+        private readonly neode: Neode,
     ) {
         neode.with({User:UserSchema})
     }
@@ -30,3 +31,7 @@ export class AuthService {
         return { accessToken };
     }
 }
+function InjectConnection() {
+    throw new Error('Function not implemented.');
+}
+
