@@ -15,10 +15,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
     async validate(payload: JwtPayload){
         const { id } = payload
-        const user = this.neode.find('User',id);
+        const user:Neode.Node<UserInterface> = await this.neode.find('User',id);
         if ( !user ){
             throw new UnauthorizedException();
         }
-        return user as unknown as UserInterface;
+        return user;
     }
 }
