@@ -8,7 +8,8 @@ import UserSchema from './dto/user.model';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserInterface } from './interfaces/user.interfaces';
-import {ValidationError} from 'class-validator'
+
+
 
 @Injectable()
 export class AuthService {
@@ -26,7 +27,7 @@ export class AuthService {
         const id = uuid()
         const isFirstAuth = true
         let hashedPassword : string
-
+        
         try{
             const salt = await bcrypt.genSalt()
             hashedPassword = await bcrypt.hash(password, salt)
@@ -39,11 +40,7 @@ export class AuthService {
             const payload: JwtPayload = { id };
             const accessToken: string = this.jwtService.sign(payload);
             return { accessToken };
-        } catch (err: unknown) {
-            console.log();
-            if(err instanceof ValidationError)
-                throw new BadRequestException(err.toString())
-            
+        } catch (err: unknown) {            
             if(err instanceof Neo4jError){
                 if((err as Neo4jError).code === 'Neo.ClientError.Schema.ConstraintValidationFailed'){
                     let user:Neode.Node<UserInterface> = await this.neode.first('User','username',username)
