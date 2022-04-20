@@ -5,6 +5,7 @@ import { NeodeModule } from 'neode-nestjs/dist';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import UserSchema from './dto/user.model';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
     imports:[
@@ -17,7 +18,8 @@ import UserSchema from './dto/user.model';
         }),
         NeodeModule.forFeature({User: UserSchema}),
     ],
+    providers: [AuthService, JwtStrategy],
     controllers: [AuthController],
-    providers: [AuthService],
+    exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

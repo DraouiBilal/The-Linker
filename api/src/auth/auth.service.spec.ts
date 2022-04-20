@@ -1,7 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import { NeodeModule } from 'neode-nestjs/dist';
+import { AuthService } from './auth.service';
+import { LoginCredentialsDTO } from './dto/login-credentials.dto';
 import * as Neode from 'neode';
 import { SignupCredentialsDto } from './dto/signup-credentials.dto';
 import UserSchema from './dto/user.model';
@@ -26,9 +27,17 @@ const mockGoodUser:SignupCredentialsDto = {
 }
 
 
-
 describe('AuthService', () => {
   let service: AuthService;
+
+  const loginCredentialsDTO:LoginCredentialsDTO = {
+    email:'akramfares2001@gmail.com',
+    password: '123456789',
+  };
+  const loginCredentialsDTOWithWrongPassword:LoginCredentialsDTO = {
+    email:'akramfares2001@gmail.com',
+    password: 'dsqdsqdq',
+  };
 
   beforeEach(async () => {
 
@@ -45,8 +54,7 @@ describe('AuthService', () => {
         AuthService,
       ],
     }).compile();
-
-    service = module.get<AuthService>(AuthService);
+      service = module.get<AuthService>(AuthService);
   });
 
   describe('signup', () => {
@@ -63,5 +71,21 @@ describe('AuthService', () => {
     it('Calls the AuthService.signup and reject the repeated user', async () => {
       await expect(service.signup(mockGoodUser)).rejects.toThrow(ConflictException)
     })
+  })
+
+  describe('login', () => {
+    it('ServiceLogin', async () => {
+      // check if the function has recieved the correct login credentials
+      await expect(service.login(loginCredentialsDTO)).resolves.not.toThrow();
+
+      // check if the output the method is an accessToken
+      // that match the given pattern ( someting1.something2.something3 )
+      await expect(service.login(loginCredentialsDTO)).resolves.toEqual({
+        accessToken: expect.stringMatching(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
+      })
+
+      // check if the function has recieved some wrong login credentials
+      await expect(service.login(loginCredentialsDTOWithWrongPassword)).rejects.toThrow();
+    });
   })
 });

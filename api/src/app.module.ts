@@ -4,6 +4,5 @@ import { NeodeModule } from 'neode-nestjs';
 
 @Module({
   imports: [NeodeModule.forRoot(),AuthModule],
-  
 })
 export class AppModule {}

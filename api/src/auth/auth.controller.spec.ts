@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NeodeModule } from 'neode-nestjs/dist';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { LoginCredentialsDTO } from './dto/login-credentials.dto';
 import { SignupCredentialsDto } from './dto/signup-credentials.dto';
 import { JwtModule } from '@nestjs/jwt';
-import { NeodeModule } from 'neode-nestjs/dist';
 import * as Neode from 'neode';
 import UserSchema from './dto/user.model';
 import { UserInterface } from './interfaces/user.interfaces';
@@ -29,6 +30,17 @@ const deleteGoodUser = async () => {
 
 describe('AuthController', () => {
   let controller: AuthController;
+
+
+  const loginCredentialsDTO:LoginCredentialsDTO = {
+    email:'akramfares2001@gmail.com',
+    password: '123456789',
+  };
+  const loginCredentialsDTOWithWrongPassword:LoginCredentialsDTO = {
+    email:'akramfares2001@gmail.com',
+    password: 'dsqdsqdq',
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports:[
@@ -39,10 +51,10 @@ describe('AuthController', () => {
               expiresIn: 3600 * 24 * 7 // 7 days 
           }
       }),],
-      controllers:[AuthController],
-      providers: [
-        AuthService,
-      ],
+      controllers: [AuthController],
+      providers:[
+        AuthService
+      ]
     }).compile();
 
       controller = module.get<AuthController>(AuthController);
@@ -62,5 +74,21 @@ describe('AuthController', () => {
     it('Calls the AuthController.signup and reject the repeated user', async () => {
       await expect(controller.signup(mockGoodUser)).rejects.toThrow(ConflictException)
     })
+  })
+  
+  describe('login', () => {
+    it('ControllerLogin', async () => {
+      // check if the function has recieved the correct login credentials
+      await expect(controller.login(loginCredentialsDTO)).resolves.not.toThrow();
+
+      // check if the output the method is an accessToken
+      // that match the given pattern ( someting1.something2.something3 )
+      await expect(controller.login(loginCredentialsDTO)).resolves.toEqual({
+        accessToken: expect.stringMatching(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
+      })
+
+      // check if the function has recieved some wrong login credentials
+      await expect(controller.login(loginCredentialsDTOWithWrongPassword)).rejects.toThrow();
+    });
   })
 });

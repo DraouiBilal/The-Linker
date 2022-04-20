@@ -1,5 +1,6 @@
-import { ConflictException, Inject, Injectable, InternalServerErrorException,BadRequestException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, InternalServerErrorException, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { SignupCredentialsDto } from './dto/signup-credentials.dto';
+import { LoginCredentialsDTO } from './dto/login-credentials.dto';
 import * as Neode from 'neode';
 import * as bcrypt from 'bcrypt';
 import {Neo4jError} from 'neo4j-driver'
@@ -8,8 +9,6 @@ import UserSchema from './dto/user.model';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserInterface } from './interfaces/user.interfaces';
-
-
 
 @Injectable()
 export class AuthService {
@@ -55,5 +54,21 @@ export class AuthService {
             throw new InternalServerErrorException('Server Error')
         }
         
+    }
+  
+    async login(loginCredentialsDTO:LoginCredentialsDTO){
+        const { email, password } = loginCredentialsDTO
+        const userInstance:Neode.Node<UserInterface> = await this.neode.first('User','email',email);
+        if ( !userInstance ){
+            throw new UnauthorizedException('Please check your login credentials');
+        }
+        const user = await userInstance.toJson()
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if ( !isPasswordValid ){
+            throw new UnauthorizedException('Please check your login credentials');
+        }
+        const payload: JwtPayload = { "id": user.id };
+        const accessToken: string = this.jwtService.sign(payload);
+        return { accessToken };
     }
 }
