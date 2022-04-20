@@ -10,7 +10,7 @@ import UserSchema from './dto/user.model';
     imports:[
         PassportModule.register({defaultStrategy : "jwt" }),
         JwtModule.register({
-            secret: "jwt-secret",
+            secret: process.env.JWT_SECRET,
             signOptions:{
                 expiresIn: 3600 * 24 * 7 // 7 days 
             }

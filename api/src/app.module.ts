@@ -1,13 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { NeodeModule } from 'neode-nestjs';
 
 @Module({
-  imports: [AuthModule,NeodeModule.forRoot()],
-  controllers: [AuthController],
-  providers: [AuthService],
+  imports: [NeodeModule.forRoot(),AuthModule],
   
 })
 export class AppModule {}

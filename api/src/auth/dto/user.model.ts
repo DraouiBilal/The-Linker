@@ -16,6 +16,7 @@ const UserSchema: SchemaObject = {
     },
     username: {
         type: 'string',
+        unique: true,
         required: true,
     },
     email:{
@@ -32,7 +33,7 @@ const UserSchema: SchemaObject = {
     },
     isFirstAuth: {
         type: 'boolean',
-        default: false,
+        default: true,
     },
 };
 
