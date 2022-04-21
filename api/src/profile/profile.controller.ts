@@ -14,6 +14,7 @@ export class ProfileController {
     @Put()
     async updateProfile(@Body() updateProfileDto: UpdateProfileDto) : Promise<UserInterface> {
         return this.profileService.updateProfile(updateProfileDto)
+    }
     @Get()
     @UseGuards(AuthGuard())
     async getProfile(@GetUser() userNode:Neode.Node<UserInterface>) {
