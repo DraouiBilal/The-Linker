@@ -12,9 +12,11 @@ export class ProfileController {
     constructor(private profileService: ProfileService){}
 
     @Put()
-    async updateProfile(@Body() updateProfileDto: UpdateProfileDto) : Promise<UserInterface> {
-        return this.profileService.updateProfile(updateProfileDto)
+    @UseGuards(AuthGuard())
+    async updateProfile(@GetUser() userNode:Neode.Node<UserInterface>, @Body() updateProfileDto: UpdateProfileDto) : Promise<UserInterface> {
+        return this.profileService.updateProfile(userNode,updateProfileDto)
     }
+
     @Get()
     @UseGuards(AuthGuard())
     async getProfile(@GetUser() userNode:Neode.Node<UserInterface>) {

@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsEmail, IsString, Length, Matches} from 'class-validator'
+import {IsNotEmpty, IsEmail, IsString,IsOptional, Length, Matches} from 'class-validator'
 import { UserInterface } from '../../auth/interfaces/user.interfaces'
 
 export class UpdateProfileDto implements Partial<UserInterface>{
@@ -14,6 +14,8 @@ export class UpdateProfileDto implements Partial<UserInterface>{
     @IsString()
     username: string
 
+
+    @IsOptional()
     @IsNotEmpty()
     @IsString()
     @Length(8,25)
@@ -21,11 +23,12 @@ export class UpdateProfileDto implements Partial<UserInterface>{
         message: 'password is too weak',
       })
     password: string
-
+    
+    
     @IsEmail()
     email: string
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     avatar: string
 }

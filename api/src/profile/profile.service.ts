@@ -14,34 +14,37 @@ export class ProfileService {
         neode.with({User:UserSchema})
     }
 
-    async updateProfile(updateProfileDto: UpdateProfileDto): Promise<UserInterface>{
-        const user:Neode.Node<UserInterface> = await this.neode.first('User','username',updateProfileDto.username)
+    async updateProfile(userNode:Neode.Node<UserInterface>, updateProfileDto: UpdateProfileDto): Promise<UserInterface>{
         let hashedPassword : string
 
         try{
             const salt = await bcrypt.genSalt()
-            hashedPassword = await bcrypt.hash(updateProfileDto.password, salt)
-        }catch{
+            hashedPassword = updateProfileDto.password?
+                await bcrypt.hash(updateProfileDto.password, salt):
+                userNode.properties().password
+        }catch(err: unknown){
             throw new InternalServerErrorException('Server Error')
         }
 
-        let updatedUser:Neode.Node<UserInterface>
-
+        let updatedUser:Neode.Node<UserInterface> = userNode
+ 
         try{
-            updatedUser = await user.update({
+            updatedUser = await userNode.update({
                 ...updateProfileDto,
+                avatar: updateProfileDto.avatar || userNode.properties().avatar,
                 password: hashedPassword,
-                id: user.properties().id,
-                isFirstAuth: user.properties().isFirstAuth
+                id: userNode.properties().id,
+                isFirstAuth: userNode.properties().isFirstAuth
             })
             return updatedUser.properties()
         }catch(err: unknown){
             if(err instanceof Neo4jError){
-                if((err as Neo4jError).code === 'Neo.ClientError.Schema.ConstraintValidationFailed'){
-                        
+                if(err.code === 'Neo.ClientError.Schema.ConstraintValidationFailed'){
+                    console.log(err);
+                    
                     const user:Neode.Node<UserInterface> = await this.neode.first('User','email',updateProfileDto.email)
                     
-                    if(user && !updatedUser)    
+                    if(user && user.properties().id !== updatedUser.properties().id)    
                         throw new ConflictException('Email already exists')
                 }
             }
