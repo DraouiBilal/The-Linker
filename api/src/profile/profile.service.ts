@@ -8,7 +8,6 @@ import {Neo4jError} from 'neo4j-driver'
 
 @Injectable()
 export class ProfileService {
-
     constructor(
         @Inject('Connection') private readonly neode: Neode
     ){
@@ -49,4 +48,8 @@ export class ProfileService {
             throw new InternalServerErrorException('Server Error')
         }
    }
+  
+    async getProfile(user: UserInterface):Promise<{ user:UserInterface }>{
+        return { user }
+    }
 }
