@@ -1,6 +1,8 @@
 import { SchemaObject } from 'neode';
+import * as Neode from 'neode'
 
 const UserSchema: SchemaObject = {
+    // properties
     id:{
           type: 'uuid',
           primary: true,
@@ -35,6 +37,19 @@ const UserSchema: SchemaObject = {
         type: 'boolean',
         default: true,
     },
+    
+    // relationship
+    friendOf:{
+        type:'relationship',
+        relationship:'FRIEND_OF',
+        direction: 'direction_both' ,
+        properties: {
+            'since':'string',
+        },
+        target: 'User',
+        eager: true // <-- eager load this relationship
+    }
+
 };
 
 export default UserSchema;
