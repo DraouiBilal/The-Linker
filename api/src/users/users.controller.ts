@@ -11,9 +11,21 @@ export class UsersController {
 
     constructor(private userService: UsersService){}
 
-    @Get()
+    @Get('/unknown-users')
     async getAllUsers(@GetUser() user:Neode.Node<UserInterface>){
         const unknownUsers:UserInterface[] = await this.userService.getAllUsers(user);
         return {unknownUsers}
+    }
+
+    @Get('/friends')
+    async getAllFriends(@GetUser() user:Neode.Node<UserInterface>){
+        const friends:UserInterface[] = await this.userService.getAllFriends(user);
+        return {friends}
+    }
+
+    @Get('/pending-requests')
+    async getAllPendingRequests(@GetUser() user:Neode.Node<UserInterface>){
+        const pendingRequests:UserInterface[] = await this.userService.getAllPendingRequests(user);
+        return {pendingRequests}
     }
 }

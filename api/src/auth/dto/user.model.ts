@@ -38,7 +38,7 @@ const UserSchema: SchemaObject = {
         default: true,
     },
     
-    // relationship
+    // relationships
     friendOf:{
         type:'relationship',
         relationship:'FRIEND_OF',
@@ -48,8 +48,17 @@ const UserSchema: SchemaObject = {
         },
         target: 'User',
         eager: true // <-- eager load this relationship
+    },
+    pendingRequest:{
+        type:'relationship',
+        relationship:'WANNA_BE_FRIEND_WITH',
+        direction: 'direction_out' ,
+        properties: {
+            'since':'string',
+        },
+        target: 'User',
+        eager: true
     }
-
 };
 
 export default UserSchema;
