@@ -1,4 +1,4 @@
-import { Controller, Delete, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import * as Neode from 'neode'
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
