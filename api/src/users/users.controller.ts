@@ -28,4 +28,10 @@ export class UsersController {
         const pendingRequests:UserInterface[] = await this.userService.getAllPendingRequests(user);
         return {pendingRequests}
     }
+
+    @Get('/invitations')
+    async getAllPendingInvitaions(@GetUser() user:Neode.Node<UserInterface>){
+        const pendingInvitaions:UserInterface[] = await this.userService.getAllPendingInvitaions(user);
+        return {pendingInvitaions}
+    }
 }
