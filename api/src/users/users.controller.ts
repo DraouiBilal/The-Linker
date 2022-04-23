@@ -1,4 +1,4 @@
-import { Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Param, Post, Put, UseGuards } from '@nestjs/common';
 import * as Neode from 'neode'
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
@@ -11,8 +11,19 @@ export class UsersController {
 
     constructor(private userService: UsersService){}
 
-    @Post("/:id")
-    async addFriend(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
-        return await this.userService.addFriend(userNode,id)
+    @Post('/:id')
+    async sendFriendRequest(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
+        return await this.userService.sendFriendRequest(userNode,id)
+    }
+    
+    
+    @Put("/:id")
+    async acceptFriendRequest(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
+        return await this.userService.acceptFriendRequest(userNode,id)
+    }
+
+    @Delete("/:id")
+    async removeFriend(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
+        return await this.userService.removeFriend(userNode,id)
     }
 }
