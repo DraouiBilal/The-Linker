@@ -4,9 +4,9 @@ import * as Neode from 'neode'
 const UserSchema: SchemaObject = {
     // properties
     id:{
-          type: 'uuid',
-          primary: true,
-          required: true,
+        type: 'uuid',
+        primary: true,
+        required: true,
     },
     lastname: {
         type: 'string',
@@ -38,23 +38,23 @@ const UserSchema: SchemaObject = {
         default: true,
     },
     
-    // relationships
+    // relationship
     friendOf:{
-        type:'relationship',
+        type:'relationships',
         relationship:'FRIEND_OF',
         direction: 'direction_both' ,
         properties: {
-            'since':'string',
+            'since':'datetime',
         },
         target: 'User',
         eager: true // <-- eager load this relationship
     },
     pendingRequest:{
-        type:'relationship',
+        type:'relationships',
         relationship:'WANNA_BE_FRIEND_WITH',
         direction: 'direction_out' ,
         properties: {
-            'since':'string',
+            'since':'datetime',
         },
         target: 'User',
         eager: true
