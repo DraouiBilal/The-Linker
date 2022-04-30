@@ -1,6 +1,8 @@
 import { SchemaObject } from 'neode';
+import * as Neode from 'neode'
 
 const UserSchema: SchemaObject = {
+    // properties
     id:{
         type: 'uuid',
         primary: true,
@@ -57,7 +59,6 @@ const UserSchema: SchemaObject = {
         target: 'User',
         eager: true
     }
-
 };
 
 export default UserSchema;
