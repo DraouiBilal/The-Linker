@@ -1,3 +1,5 @@
+import * as Neode from 'neode' 
+
 export interface UserInterface {
     id: string;
     lastname:string;
@@ -7,4 +9,6 @@ export interface UserInterface {
     password:string;
     avatar?:string;
     isFirstAuth:boolean;
+    friendOf?: any[]
+    pendingRequest?: any[]
 }
