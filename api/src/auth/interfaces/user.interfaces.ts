@@ -9,6 +9,6 @@ export interface UserInterface {
     password:string;
     avatar?:string;
     isFirstAuth:boolean;
-    friendOf?: Neode.Relationship[]
-    pendingRequest?: Neode.NodeCollection[]
+    friendOf?: any[]
+    pendingRequest?: any[]
 }
