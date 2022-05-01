@@ -52,18 +52,9 @@ export class UsersService {
     async sendFriendRequest(userNode:Neode.Node<UserInterface>, id:string): Promise<string> {
         let otherUser: Neode.Node<UserInterface>
         let friendList: UserInterface[] 
-
-        try {
-            friendList = await this.getAllFriends(userNode)
-        } catch (err: unknown) {
-            console.error(err)
-            throw new InternalServerErrorException('Server Error')
-        }
+        let requestsMade: UserInterface[]
+        let requestsReceived: UserInterface[]
         
-        const other = friendList.find(friend=>friend.id===id)
-        if(other) 
-            throw new BadRequestException('User is already a friend')
-
         try {
             otherUser = await this.neode.first('User','id',id)
         } catch (err: unknown) {
@@ -74,6 +65,28 @@ export class UsersService {
         if(!otherUser)
             throw new NotFoundException("User not found")
 
+        
+        try {
+            friendList = await this.getAllFriends(userNode)
+            requestsMade = await this.getAllPendingRequests(userNode)
+            requestsReceived = await this.getAllPendingInvitaions(userNode)
+        } catch (err: unknown) {
+            console.error(err)
+            throw new InternalServerErrorException('Server Error')
+        }
+        
+        let other = friendList.find(friend=>friend.id===id)
+        if(other) 
+            throw new BadRequestException('User is already a friend')
+
+        other = requestsMade.find(request=>request.id===id)
+        if(other) 
+            throw new BadRequestException('You already sent a request to this user')
+
+        other = requestsReceived.find(request=>request.id===id)
+        if(other) 
+            throw new BadRequestException('This user already sent you a request')
+        
         try{
             await userNode.relateTo(otherUser,'pendingRequest',{since:new Date()})
             return "Friend request sent"
@@ -84,13 +97,41 @@ export class UsersService {
         
     }
 
+
+
+    async removeRequest(userNode:Neode.Node<UserInterface>, id:string):Promise<void>{
+        let otherUser: Neode.Node<UserInterface>
+        
+        try {
+            otherUser = await this.neode.first('User','id',id) 
+        } catch (err: unknown) {
+            console.error(err)
+            throw new InternalServerErrorException('Server Error')
+        }
+
+        if(!otherUser)
+            throw new NotFoundException("User not found")
+
+        try{
+            const query = "MATCH (n:User {id:$nid})-[r:WANNA_BE_FRIEND_WITH]-(m:User {id:$mid}) delete r";
+            const params = {
+                nid :id,
+                mid: userNode.properties().id
+            }
+            await this.neode.writeCypher(query,params);
+        }catch(err: unknown) {
+            console.error(err)
+            throw new InternalServerErrorException('Server Error')
+        }
+    }
+
     async removeFriend(userNode: Neode.Node<UserInterface>, id: string): Promise<string> {
         let otherUser: Neode.Node<UserInterface>
         
         try {
             otherUser = await this.neode.first('User','id',id) 
         } catch (err: unknown) {
-            console.log(err)
+            console.error(err)
             throw new InternalServerErrorException('Server Error')
         }
 
@@ -112,7 +153,7 @@ export class UsersService {
     }
         
     /**
-     * this method return all the users that are nor friends of the currents user
+     * this method return all the users that are not friends of the current user
      * nor the ones that they send him a friend request nor the ones that he/she
      * sent the request to
      * @param user 
@@ -162,8 +203,8 @@ export class UsersService {
 
 
     /**
-     * this method will return the request made by the current user
-     * that the persons concerned did not accept or refuse the request yet
+     * this method will return the requests made by the current user
+     * that the people concerned did not accept or refuse the request yet
      * @param user 
      * @returns 
      */

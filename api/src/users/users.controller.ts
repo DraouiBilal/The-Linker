@@ -11,18 +11,30 @@ export class UsersController {
 
     constructor(private userService: UsersService){}
   
-    @Post('/:id')
+    @Post('/request/:id')
     async sendFriendRequest(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
         return await this.userService.sendFriendRequest(userNode,id)
     }
     
     
-    @Put("/:id")
+    @Put("/request/:id/accept")
     async acceptFriendRequest(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
         return await this.userService.acceptFriendRequest(userNode,id)
     }
 
-    @Delete("/:id")
+    @Put("/request/:id/refuse")
+    async refuseFriendRequest(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
+        await this.userService.removeRequest(userNode,id)
+        return "Friend Request Refused"
+    }
+
+    @Delete("/request/:id")
+    async cancelFriendRequest(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
+        await this.userService.removeRequest(userNode,id)
+        return "Friend Request Canceled"
+    }
+
+    @Delete("/friend/:id")
     async removeFriend(@GetUser() userNode:Neode.Node<UserInterface>,@Param('id') id:string): Promise<string>{
         return await this.userService.removeFriend(userNode,id)
     }
