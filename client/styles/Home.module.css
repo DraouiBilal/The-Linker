@@ -120,6 +120,29 @@ form.signUpForm {
     transition: 0.3s;
 }
 
+.labelIndex {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.95rem;
+    color: #bbb;
+    pointer-events: none;
+    transition: 0.4s;
+}
+
+.mainIndex {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background-image: var(--background-image-url);
+    background-size: cover;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .signBtn:hover {
     background-color: #8371fd;
 }
@@ -154,6 +177,19 @@ main.signUpMode .formsWrap {
 
 main.signUpMode .carousel {
     left: 0%;
+}
+
+.formIndex {
+    max-width: 260px;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    transition: opacity 0.02s 0.4s;
 }
 
 .carousel {
@@ -304,6 +340,11 @@ main.signUpMode .carousel {
     .textSlider {
         width: 100%;
     }
+    .formIndex {
+        max-width: revert;
+        padding: 1.5rem 2.5rem 2rem;
+        transition: transform 0.8s ease-in-out, opacity 0.45s linear;
+    }
 }
 
 @media (max-width: 530px) {
@@ -326,5 +367,12 @@ main.signUpMode .carousel {
 
     .textGroup h2 {
         font-size: 1.2rem;
+    }
+
+    .mainIndex {
+        padding: 1rem;
+    }
+    .formIndex {
+        padding: 1rem 2rem 1.5rem;
     }
 }

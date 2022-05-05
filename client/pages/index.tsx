@@ -68,7 +68,7 @@ const Home: NextPage = () => {
         e.preventDefault();
         const result = await singUp(signUpCredentials);
         if (result.errors.length === 0) {
-            Alert(
+            await Alert(
                 "success",
                 "Registred successfully",
                 "Welcome to The-Linker, Enjoy your time"
@@ -76,7 +76,7 @@ const Home: NextPage = () => {
             localStorage.setItem("accessToken", result.accessToken);
             // router.push("/users");
         } else {
-            Alert(
+            await Alert(
                 "error",
                 "Failed To Create an account",
                 result.errors.join("\n")
@@ -91,13 +91,16 @@ const Home: NextPage = () => {
             <Head>
                 <title>The-Linker | Sign In</title>
             </Head>
-            <main>
+            <main className={styles.mainIndex}>
                 <div className={styles.box}>
                     <div className={styles.innerBox}>
                         <div className={styles.formsWrap}>
                             <form
                                 autoComplete="off"
-                                className={styles.signInForm}
+                                className={clsx(
+                                    styles.signInForm,
+                                    styles.formIndex
+                                )}
                                 onSubmit={(e) => {
                                     handleFormSingInSubmit(e);
                                 }}>
@@ -131,7 +134,9 @@ const Home: NextPage = () => {
                                             }}
                                             required
                                         />
-                                        <label>Email</label>
+                                        <label className={styles.labelIndex}>
+                                            Email
+                                        </label>
                                     </div>
 
                                     <div className={styles.inputWrap}>
@@ -149,7 +154,9 @@ const Home: NextPage = () => {
                                             }}
                                             required
                                         />
-                                        <label>Password</label>
+                                        <label className={styles.labelIndex}>
+                                            Password
+                                        </label>
                                     </div>
 
                                     <input
@@ -167,7 +174,10 @@ const Home: NextPage = () => {
                             </form>
                             <form
                                 autoComplete="off"
-                                className={styles.signUpForm}
+                                className={clsx(
+                                    styles.signUpForm,
+                                    styles.formIndex
+                                )}
                                 onSubmit={(e) => {
                                     handleFormSingUpSubmit(e);
                                 }}>
@@ -203,7 +213,9 @@ const Home: NextPage = () => {
                                             }}
                                             required
                                         />
-                                        <label>Last name</label>
+                                        <label className={styles.labelIndex}>
+                                            Last name
+                                        </label>
                                     </div>
                                     <div className={styles.inputWrap}>
                                         <input
@@ -220,7 +232,9 @@ const Home: NextPage = () => {
                                             }}
                                             required
                                         />
-                                        <label>First name</label>
+                                        <label className={styles.labelIndex}>
+                                            First name
+                                        </label>
                                     </div>
                                     <div className={styles.inputWrap}>
                                         <input
@@ -237,7 +251,9 @@ const Home: NextPage = () => {
                                             }}
                                             required
                                         />
-                                        <label>Username</label>
+                                        <label className={styles.labelIndex}>
+                                            Username
+                                        </label>
                                     </div>
 
                                     <div className={styles.inputWrap}>
@@ -254,7 +270,9 @@ const Home: NextPage = () => {
                                             }}
                                             required
                                         />
-                                        <label>Email</label>
+                                        <label className={styles.labelIndex}>
+                                            Email
+                                        </label>
                                     </div>
 
                                     <div className={styles.inputWrap}>
@@ -272,7 +290,9 @@ const Home: NextPage = () => {
                                             }}
                                             required
                                         />
-                                        <label>Password</label>
+                                        <label className={styles.labelIndex}>
+                                            Password
+                                        </label>
                                     </div>
                                     <input
                                         type="submit"
