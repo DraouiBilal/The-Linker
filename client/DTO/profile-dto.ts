@@ -6,6 +6,10 @@ export type updateProfileDTO = {
     password: string | undefined;
     avatar: string;
 };
+export type updateProfileResponseDTO = {
+    user: User | null;
+    errors: string[];
+};
 export type User = {
     id: string;
     lastname: string;

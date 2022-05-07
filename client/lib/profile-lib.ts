@@ -1,6 +1,10 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
-import { updateProfileDTO, User } from "../DTO/profile-dto";
+import {
+    updateProfileDTO,
+    updateProfileResponseDTO,
+    User,
+} from "../DTO/profile-dto";
 import { ImageConverter } from "../utils/ImageConverter";
 import Links from "../utils/links";
 
@@ -67,7 +71,7 @@ export const validateUpdateForm = async (user: User) => {
                         firstname: "",
                         username: "",
                         email: "",
-                        password: "",
+                        password: undefined,
                         avatar: "",
                     };
                     updateProfileDto.lastname = lastname;
@@ -101,4 +105,32 @@ export const getUser = async (accessToken: string): Promise<User | null> => {
     }
 };
 
-export const updateProfile = async () => {};
+export const updateProfile = async (
+    updateProfileDto: updateProfileDTO,
+    accessToken: string
+): Promise<updateProfileResponseDTO> => {
+    try {
+        const response = await axios.put(
+            Links.UPDATE_PROFILE_LINK,
+            updateProfileDto,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }
+        );
+        return {
+            user: response.data.user,
+            errors: [],
+        };
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            return {
+                user: null,
+                errors: [error.response!.data.message],
+            };
+        }
+        return {
+            user: null,
+            errors: ["An Error has occurred"],
+        };
+    }
+};
