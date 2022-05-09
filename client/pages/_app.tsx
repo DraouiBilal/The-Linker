@@ -3,10 +3,11 @@ import type { AppProps } from "next/app";
 
 import "bootstrap/dist/css/bootstrap.css";
 import Head from "next/head";
+import UserProvider from "../store/providers/userProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
-        <>
+        <UserProvider>
             <Head>
                 <meta
                     name="viewport"
@@ -14,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 />
             </Head>
             <Component {...pageProps} />
-        </>
+        </UserProvider>
     );
 }
 
