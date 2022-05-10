@@ -97,7 +97,15 @@ export class UsersService {
         
     }
 
-
+    async getUserFromUsername(username: string): Promise<Neode.Node<UserInterface>>{
+        try {
+            const user:Neode.Node<UserInterface> = await this.neode.first('User','username',username)  
+            return user
+        } catch (err: unknown) {
+            console.error(err)
+            throw new InternalServerErrorException('Server Error')
+        }
+    }
 
     async removeRequest(userNode:Neode.Node<UserInterface>, id:string):Promise<void>{
         let otherUser: Neode.Node<UserInterface>

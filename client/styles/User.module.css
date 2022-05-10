@@ -1,0 +1,42 @@
+.m_info{
+    margin-top: 20px;
+    position: relative;
+    width: 90%;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.p_info{
+    position: absolute;
+    right: 15%;
+    color:#fff;
+}
+
+.p_info h3{
+    font-weight: 100;
+}
+
+.p_info span{
+    font-size: 15px;
+    color: rgb(233,233,233);
+}
+
+.icon{
+    position: relative;
+    margin-right: 10px;
+}
+
+.icon i{
+    position: absolute;
+    bottom: 30px;
+    right: -35%;
+    color: rgb(233,233,233);
+    cursor: pointer;
+
+}
+
+.m-info .avatar{
+    margin-left: 10px;
+}

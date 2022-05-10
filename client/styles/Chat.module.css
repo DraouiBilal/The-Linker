@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+
+.main{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../public/images/background1.jpg");
+    background-size: cover;
+}
+.container{
+    width: 60rem;
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+.chate{
+    width: 60%;
+    height: 100%;
+    display: flex;
+   
+    align-items: center;
+    flex-direction: column;
+    background: #f6f2f2;
+
+}
+
+
+
+.new_chate{
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #34debb;
+    position: absolute;
+    border-radius: 100%;
+    bottom: 8px;
+    right: 12px;
+    cursor: pointer;
+    box-shadow: 2px 1px 29px -8px rgba(52,222,187,1);
+    
+}
+.new_chate span{
+    font-size: 2rem;
+    color: white;
+}
+
+.last_chate{
+    opacity: .5;
+}
+
