@@ -1,19 +1,19 @@
 import {io, Socket} from 'socket.io-client'
 
 class SocketClient {
-    static socket: Socket | null = null
+    private static socket: Socket | null = null
 
-    static connectSocket = function(username?:string){
+    private static connectSocket = function(id:string){
         return io("ws://localhost:5001/chat",{
         query:{
-            username:'DraouiBilal',
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEwOWMxMjliLTY4YWUtNDIwNi1iMDcwLWQ2YjhhMjhkZWI5ZiIsImlhdCI6MTY1MTk0ODU1MywiZXhwIjoxNjUyNTUzMzUzfQ.N1RDZT9GzY_PNQe0sPBfznY5TVkzOLrpUar1qxXwIGM"
+            id,
+            token: localStorage.getItem("accessToken")
         }
     })
     }
-    static getSocket = function (username:string){
-        if(SocketClient.socket===null)
-            SocketClient.socket = SocketClient.connectSocket(username)
+    static getSocket = function (id:string){
+        if(!SocketClient.socket)
+            SocketClient.socket = SocketClient.connectSocket(id)
         return SocketClient.socket
     }
 }

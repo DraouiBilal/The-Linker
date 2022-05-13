@@ -1,12 +1,17 @@
-import {IsNotEmpty,IsString} from 'class-validator'
+import {IsNotEmpty,IsString, IsUUID, IsNumber} from 'class-validator'
 
 export class SendMessageDto{
     
     @IsNotEmpty()
-    @IsString()
+    @IsUUID()
     to: string
 
     @IsNotEmpty()
     @IsString()
     message:string
-}
+
+    @IsNotEmpty()
+    @IsNumber()
+    id: number
+}   
+

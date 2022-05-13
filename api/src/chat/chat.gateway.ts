@@ -9,6 +9,7 @@ import { UseGuards } from '@nestjs/common';
 import { WsGuard } from './Guards/WsGuard.guard';
 import { GetUser } from './get-user.decorator';
 import * as Neode from 'neode'
+import { GetMessagesDto } from './dto/get-messages.dto';
 
 
 @UseGuards(WsGuard)
@@ -26,43 +27,45 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   }
 
   async handleConnection(@ConnectedSocket() client: Socket) {
-    const username : string = client.handshake.query.username as string
+    const id : string = client.handshake.query.id as string
     
-    if(!username)
-      return "User not connected"
-    this.socketToUser[username] = client
-    const user: Neode.Node<UserInterface> = await this.usersService.getUserFromUsername(username)
+    if(!id)
+    return "User not connected"
+    this.socketToUser[id] = client
+    const user: Neode.Node<UserInterface> = await this.usersService.getUserFromID(id)
     
     if(!user)
       throw new WsException("User not found")
     
     const friends: UserInterface[] = await this.usersService.getAllFriends(user)
+    
     friends.forEach(friend => {
-      const friendSocket:Socket = this.socketToUser[friend.username]
+      const friendSocket:Socket = this.socketToUser[friend.id]
+      
       if(friendSocket)
-        friendSocket.emit("friendConnected",{username: friend.username})
+        friendSocket.emit("friendConnected",{id: user.properties().id})
     })
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
-    const username : string = client.handshake.query.username as string
-    if(!username)
+    const id : string = client.handshake.query.id as string
+    if(!id)
       return "User not connected"
     
     const key:string = Object.keys(this.socketToUser).find(k=>this.socketToUser[k] && this.socketToUser[k].id===client.id);
     this.socketToUser[key] = null
 
-    this.socketToUser[username] = client
-    const user: Neode.Node<UserInterface> = await this.usersService.getUserFromUsername(username)
+    this.socketToUser[id] = client
+    const user: Neode.Node<UserInterface> = await this.usersService.getUserFromID(id)
     
     if(!user)
       throw new WsException("User not found")
     
     const friends: UserInterface[] = await this.usersService.getAllFriends(user)
     friends.forEach(friend => {
-      const friendSocket:Socket = this.socketToUser[friend.username]
+      const friendSocket:Socket = this.socketToUser[friend.id]
       if(friendSocket)
-        friendSocket.emit("friendDisonnected",{username: friend.username})
+        friendSocket.emit("friendDisonnected",{id: user.properties().id})
     })
   }
 
@@ -72,10 +75,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     @MessageBody() sendMessageDto: SendMessageDto, 
     @GetUser() userNode:Neode.Node<UserInterface>
   ): Promise<void> {
-
+    
     if(this.socketToUser[sendMessageDto.to])
       this.socketToUser[sendMessageDto.to].emit("message",{
-        from:userNode.properties().username,
+        from:userNode.properties().id,
         ...sendMessageDto
       })
     try{
@@ -89,10 +92,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   @SubscribeMessage('getMessages')
   async handleGetMessages(
       @ConnectedSocket() client: Socket,
-      @MessageBody('to') to: string,
+      @MessageBody() getMessageDto: GetMessagesDto,
       @GetUser() userNode:Neode.Node<UserInterface>
   ): Promise<void>{
-    const messages = await this.chatRepository.getMessages(userNode.properties().username,to)
+    const messages = await this.chatRepository.getMessages(userNode,getMessageDto)
     client.emit("getMessages",{messages})
   }
 
@@ -102,9 +105,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       @GetUser() userNode:Neode.Node<UserInterface>
   ): Promise<void>{
       const friends = await this.chatRepository.getFriends(userNode)
-      const connectedFriends = await friends.map(friend => ({
+      const connectedFriends = friends.map(friend => ({
         ...friend,
-        connected: this.socketToUser[friend.username]?'yes':'no'
+        connected: this.socketToUser[friend.id] ? true : false
       }))
       client.emit("getFriends",{friends: connectedFriends})
   }

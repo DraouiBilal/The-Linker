@@ -14,7 +14,7 @@ export class ProfileService {
         neode.with({User:UserSchema})
     }
 
-    async updateProfile(userNode:Neode.Node<UserInterface>, updateProfileDto: UpdateProfileDto): Promise<UserInterface>{
+    async updateProfile(userNode:Neode.Node<UserInterface>, updateProfileDto: UpdateProfileDto): Promise<{user:UserInterface}>{
         let hashedPassword : string
 
         try{
@@ -36,7 +36,9 @@ export class ProfileService {
                 id: userNode.properties().id,
                 isFirstAuth: userNode.properties().isFirstAuth
             })
-            return updatedUser.properties()
+            return {
+		user: updatedUser.properties(),
+		}
         }catch(err: unknown){
             if(err instanceof Neo4jError){
                 if(err.code === 'Neo.ClientError.Schema.ConstraintValidationFailed'){

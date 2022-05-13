@@ -37,6 +37,7 @@
 
 }
 
-.m-info .avatar{
-    margin-left: 10px;
+.m_info .avatar{
+    cursor: pointer !important;
+    margin-left: 20px;
 }
