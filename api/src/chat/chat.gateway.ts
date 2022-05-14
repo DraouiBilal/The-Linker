@@ -10,12 +10,16 @@ import { WsGuard } from './Guards/WsGuard.guard';
 import { GetUser } from './get-user.decorator';
 import * as Neode from 'neode'
 import { GetMessagesDto } from './dto/get-messages.dto';
-
+import * as cryptico from "cryptico"
+import { SendAesSecretDto } from './dto/send-aes-secret.dto';
+import * as CryptoJS from 'crypto-js'
 
 @UseGuards(WsGuard)
 @WebSocketGateway(5001, { namespace: 'chat',cors:'*' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit{
   private socketToUser:any
+  private secrets:any
+  private keys: {privateKey:any, publicKey: string}
 
   constructor(
     private usersService:UsersService,
@@ -24,13 +28,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   afterInit() {
     this.socketToUser = {}
+    this.secrets = {}
+    const RSAKey = cryptico.generateRSAKey(process.env.AES_SECRET, 1024)
+    this.keys = {
+      privateKey: RSAKey,
+      publicKey: cryptico.publicKeyString(RSAKey),
+    }
   }
 
   async handleConnection(@ConnectedSocket() client: Socket) {
     const id : string = client.handshake.query.id as string
     
     if(!id)
-    return "User not connected"
+      return "User not connected"
     this.socketToUser[id] = client
     const user: Neode.Node<UserInterface> = await this.usersService.getUserFromID(id)
     
@@ -45,6 +55,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       if(friendSocket)
         friendSocket.emit("friendConnected",{id: user.properties().id})
     })
+
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -69,21 +80,50 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     })
   }
 
+  @SubscribeMessage('getPublicKey')
+  async handleGetPublicKey(
+    @ConnectedSocket() client: Socket, 
+    @GetUser() userNode:Neode.Node<UserInterface>
+  ){
+    if(this.socketToUser[userNode.properties().id])
+      this.socketToUser[userNode.properties().id].emit("getPublicKey",{publicKey:this.keys.publicKey})
+  }
+
+  @SubscribeMessage('getAesSecret')
+  async handleAesSecret(
+    @ConnectedSocket() client: Socket, 
+    @MessageBody() sendAesSecretDto: SendAesSecretDto, 
+    @GetUser() userNode:Neode.Node<UserInterface>
+  ){
+      const secret:{plaintext:string} = cryptico.decrypt(sendAesSecretDto.secret,this.keys.privateKey)
+      this.secrets[userNode.properties().id] = secret.plaintext
+  }
+
   @SubscribeMessage('message')
   async handleMessage(
     @ConnectedSocket() client: Socket, 
     @MessageBody() sendMessageDto: SendMessageDto, 
     @GetUser() userNode:Neode.Node<UserInterface>
   ): Promise<void> {
+
+    let plaintext
     
-    if(this.socketToUser[sendMessageDto.to])
+    
+    if(this.socketToUser[sendMessageDto.to] && this.secrets[sendMessageDto.to]){
+      
+      plaintext = CryptoJS.AES.decrypt(sendMessageDto.message, this.secrets[userNode.properties().id]).toString(CryptoJS.enc.Utf8)
+      
+      const newMessage = CryptoJS.AES.encrypt(plaintext,this.secrets[sendMessageDto.to]).toString();
       this.socketToUser[sendMessageDto.to].emit("message",{
         from:userNode.properties().id,
-        ...sendMessageDto
+        ...sendMessageDto,
+        message: newMessage
       })
+    }
+
     try{
       const user:UserInterface = await userNode.toJson()
-      await this.chatRepository.createMessage(sendMessageDto,user)
+      await this.chatRepository.createMessage({...sendMessageDto,message:plaintext},user)
     }catch(err: unknown) {
       throw new WsException('Unable to store message in database');
     }

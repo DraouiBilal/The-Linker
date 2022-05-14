@@ -4,14 +4,18 @@ import { User } from '../DTO/profile-dto'
 import { FormEvent, useEffect, useRef, useState } from "react"
 import { Socket } from "socket.io-client"
 import {Message as MessageT} from "../DTO/chat-dto"
+import CryptoJS from 'crypto-js'
+
 
 interface propsType {
     user:User,
     friend: User,
-    socket:Socket
+    socket:Socket,
+    secret:string
 }
 
 const ChatBody = (props:propsType) => {
+    
     const [id,setId] = useState<number>(0)
     const [message, setMessage] = useState<string>("")
     const messagesRef = useRef<MessageT[]>([])
@@ -22,9 +26,11 @@ const ChatBody = (props:propsType) => {
     const onSubmitHandler = (e:FormEvent) => {
         e.preventDefault()
         if(message.length > 0){
+            
+            const aesMessage = CryptoJS.AES.encrypt(message,props.secret).toString();
             props.socket.emit("message",{
                 to:props.friend.id,
-                message,
+                message:aesMessage,
                 id
             })
             setId(id+1)
@@ -35,9 +41,13 @@ const ChatBody = (props:propsType) => {
     }
 
     useEffect(()=>{
+        console.log(props.secret);
+        
         props.socket.on("message",(data:MessageT) => {
+            const plaintext = CryptoJS.AES.decrypt(data.message, props.secret).toString(CryptoJS.enc.Utf8)
+        
             if(messagesRef.current[messagesRef.current.length-1].id !== data.id)
-                messagesRef.current = [...messagesRef.current,data]
+                messagesRef.current = [...messagesRef.current,{...data,message:plaintext}]
             setMessages(messagesRef.current);
         })
         

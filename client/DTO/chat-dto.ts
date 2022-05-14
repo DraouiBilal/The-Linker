@@ -4,3 +4,8 @@ export type Message = {
     message: string,
     id:number
 }
+
+export type encryption = {
+    status: string,
+    cipher:string
+}

@@ -161,8 +161,14 @@ const Profile = () => {
                                         className={clsx(
                                             styles.danger,
                                             "btn danger"
-                                        )}>
+                                        )}
+                                        onClick={()=>{
+                                            localStorage.removeItem("accessToken")
+                                            router.push("/")
+                                        }}
+                                    >
                                         Logout
+                                        
                                     </button>
                                 </div>
                             </div>

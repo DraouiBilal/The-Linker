@@ -1,7 +1,6 @@
 import styles from '../styles/Chat.module.css'
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-// import { Socket } from "socket.io_client";
 import SocketClient from "../socket/SocketClient";
 import FriendsList from '../components/FriendsList';
 import ChatHead from '../components/ChatHead';
@@ -9,11 +8,13 @@ import ChatBody from '../components/ChatBody';
 import { getUser } from "../lib/profile-lib";
 import { User } from "../DTO/profile-dto";
 import { Socket } from 'socket.io-client';
-import  Head  from 'next/head';
-
-// let socket:Socket
+import Head  from 'next/head';
+import { generateAesSecret } from '../lib/chat-lib';
+import * as cryptico from "cryptico"
+import { encryption } from '../DTO/chat-dto';
 
 let socket:Socket
+let aesSecret:string
 
 const chat = ( ) => {
 
@@ -56,6 +57,18 @@ const chat = ( ) => {
           if (user) {
             setCurrentUser(user);
             socket = SocketClient.getSocket(user.id)
+            if(!localStorage.getItem("aesSecret"))
+              localStorage.setItem("aesSecret",generateAesSecret())
+              
+            aesSecret = localStorage.getItem("aesSecret")!
+
+            socket.on("getPublicKey",(data:{publicKey:string})=> {
+                const encryptedAesSecret:encryption = cryptico.encrypt(aesSecret, data.publicKey);
+                socket.emit("getAesSecret",{secret:encryptedAesSecret.cipher})   
+            })
+
+            socket.emit("getPublicKey")
+
           } else {
               router.push("/");
           }
@@ -73,7 +86,7 @@ const chat = ( ) => {
             <FriendsList socket={socket} setSelectedFriend={setSelectedFriend} user={currentUser}/>
             <div className={styles.chate}>
               <ChatHead user={selectedFriend} online={selectedFriend.connected} />
-              <ChatBody socket={socket}   user={currentUser} friend={selectedFriend}/>
+              <ChatBody secret={aesSecret} socket={socket}   user={currentUser} friend={selectedFriend}/>
             </div>
           </div>
         </main>
