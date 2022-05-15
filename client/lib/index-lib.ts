@@ -91,7 +91,6 @@ export const singUp = async (
             errors: [],
         };
     } catch (error: unknown) {
-        console.log("error in register", error);
         if (error instanceof AxiosError) {
             return {
                 accessToken: "",
