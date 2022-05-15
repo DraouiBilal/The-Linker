@@ -81,11 +81,12 @@ export const validateUpdateForm = async (user: User) => {
                     if (password.trim().length !== 0) {
                         updateProfileDto.password = password;
                     }
-                    if (avatar?.length !== 0) {
+                    if (avatar && avatar.length !== 0) {
                         updateProfileDto.avatar =
-                            ImageConverter.ConvertToString(avatar?.item(0)!);
+                            ImageConverter.ConvertToString(avatar[0]);
                     }
 
+                    console.log("avatar to update", updateProfileDto.avatar);
                     return updateProfileDto;
                 }
             }
@@ -117,6 +118,7 @@ export const updateProfile = async (
                 headers: { Authorization: `Bearer ${accessToken}` },
             }
         );
+        console.log("response", response.data.user);
         return {
             user: response.data.user,
             errors: [],

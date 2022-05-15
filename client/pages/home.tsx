@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { createRef, RefObject, useEffect, useRef, useState } from "react";
 import { FriendProps } from "../components/Home/NewFriends/Friends";
@@ -17,8 +18,7 @@ import {
 import Alert from "../utils/Alert";
 
 const Home = () => {
-
-    const router = useRouter()
+    const router = useRouter();
 
     const [tab, setTab] = useState<"NF" | "PI" | "PR" | "YF">("NF");
     const [newFriends, setNewFriends] = useState<FriendProps[]>([]);
@@ -57,8 +57,6 @@ const Home = () => {
             }
         });
     };
-
-
 
     const handleNavClick = (currentTab: "NF" | "PI" | "PR" | "YF") => {
         switch (currentTab) {
@@ -172,8 +170,7 @@ const Home = () => {
         return false;
     };
     useEffect(() => {
-        if(!localStorage.getItem("accessToken"))
-            router.push('/')
+        if (!localStorage.getItem("accessToken")) router.push("/");
         switch (tab) {
             case "NF":
                 getNewFriends().then((status) => {
@@ -209,6 +206,9 @@ const Home = () => {
     }, [router, tab]);
     return (
         <>
+            <Head>
+                <title>The-Linker | Home</title>
+            </Head>
             <div className="container bg-transparent mt-3 rounded ">
                 <div className="">
                     <ul className="nav nav-tabs nav-justified justify-content-between mb-4">

@@ -46,7 +46,7 @@ const ChatBody = (props:propsType) => {
         props.socket.on("message",(data:MessageT) => {
             const plaintext = CryptoJS.AES.decrypt(data.message, props.secret).toString(CryptoJS.enc.Utf8)
         
-            if(messagesRef.current[messagesRef.current.length-1].id !== data.id)
+            if(messagesRef.current.length>0 && messagesRef.current[messagesRef.current.length-1].id !== data.id)
                 messagesRef.current = [...messagesRef.current,{...data,message:plaintext}]
             setMessages(messagesRef.current);
         })

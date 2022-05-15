@@ -227,10 +227,12 @@ main.signUpMode .carousel {
 
 .img2 {
     transform: scale(0.4, 0.5);
+    display: none;
 }
 
 .img3 {
     transform: scale(0.3) rotate(-20deg);
+    display: none;
 }
 
 .image.show {
@@ -243,6 +245,7 @@ main.signUpMode .carousel {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    margin-top: -50px;
 }
 
 .textWrap {

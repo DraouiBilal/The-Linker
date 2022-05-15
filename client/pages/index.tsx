@@ -22,8 +22,6 @@ const Home: NextPage = () => {
 
     const router = useRouter();
 
-    
-
     const [signInCredentials, setSingInCredentials] =
         useState<signInCredentialsDTO>({ email: "", password: "" });
     const [signUpCredentials, setSingUpCredentials] =
@@ -87,8 +85,7 @@ const Home: NextPage = () => {
     };
     useEffect(() => {
         handleIndexPageDOM(styles);
-        if(localStorage.getItem('accessToken'))
-            router.push('/chat')
+        if (localStorage.getItem("accessToken")) router.push("/chat");
     }, []);
     return (
         <>
@@ -126,7 +123,7 @@ const Home: NextPage = () => {
                                     <div className={styles.inputWrap}>
                                         <input
                                             type="text"
-                                            minLength={4}
+                                            minLength={3}
                                             className={styles.inputField}
                                             autoComplete="off"
                                             name="email"
@@ -146,7 +143,7 @@ const Home: NextPage = () => {
                                     <div className={styles.inputWrap}>
                                         <input
                                             type="password"
-                                            minLength={4}
+                                            minLength={3}
                                             className={styles.inputField}
                                             autoComplete="off"
                                             name="password"
@@ -205,7 +202,7 @@ const Home: NextPage = () => {
                                     <div className={styles.inputWrap}>
                                         <input
                                             type="text"
-                                            minLength={4}
+                                            minLength={3}
                                             className={styles.inputField}
                                             autoComplete="off"
                                             name="lastname"
@@ -224,7 +221,7 @@ const Home: NextPage = () => {
                                     <div className={styles.inputWrap}>
                                         <input
                                             type="text"
-                                            minLength={4}
+                                            minLength={3}
                                             className={styles.inputField}
                                             autoComplete="off"
                                             name="firstname"
@@ -312,6 +309,7 @@ const Home: NextPage = () => {
                                 <Image
                                     src={PATH_TO_IMAGE_1}
                                     alt="Logo"
+                                    layout="responsive"
                                     className={clsx(
                                         styles.image,
                                         styles.img1,
@@ -323,6 +321,7 @@ const Home: NextPage = () => {
                                 <Image
                                     src={PATH_TO_IMAGE_2}
                                     alt="Logo"
+                                    layout="responsive"
                                     className={clsx(styles.image, styles.img2)}
                                     width={Carousel_width}
                                     height={Carousel_height}
@@ -330,6 +329,7 @@ const Home: NextPage = () => {
                                 <Image
                                     src={PATH_TO_IMAGE_3}
                                     alt="Logo"
+                                    layout="responsive"
                                     className={clsx(styles.image, styles.img3)}
                                     width={Carousel_width}
                                     height={Carousel_height}
