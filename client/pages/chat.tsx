@@ -33,18 +33,15 @@ const chat = ( ) => {
 
   const [loadingUser,setLoadingUser] = useState<boolean>(true)
   const [selectedFriend,setSelectedFriend] = useState({
-      ...currentUser,
-      avatar: "/images/iconfinder_anime_spirited_away_no_face_nobody_4043233.png"
+      ...currentUser
     })
 
-  useEffect(() => {"/images/iconfinder_anime_spirited_away_no_face_nobody_4043233.png"
+  useEffect(() => {
       const callAPI = async () => {
           const accessToken: string | null =
               localStorage.getItem("accessToken");
           if (accessToken) {
               const user: User | null = await getUser(accessToken);
-              if(user)
-                user.avatar = "/images/iconfinder_anime_spirited_away_no_face_nobody_4043233.png"
               return user;
           } else {
               router.push('/')

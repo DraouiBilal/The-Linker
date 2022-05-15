@@ -31,6 +31,7 @@ const Profile = () => {
         avatar: "",
         connected: false
     });
+    const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
         const callAPI = async () => {
             const accessToken: string | null =
@@ -43,9 +44,10 @@ const Profile = () => {
             }
         };
         callAPI().then((user) => {
-            console.log("user is ", user);
+            console.log("user is ", user?.avatar);
             if (user) {
                 setCurrentUser(user);
+                setLoading(false)
             } else {
                 router.push("/");
             }
@@ -72,7 +74,7 @@ const Profile = () => {
             }
         }
     };
-    return (
+    return (!loading &&
         <>
             <Head>
                 <title>The-Linker | Profile</title>
@@ -85,7 +87,7 @@ const Profile = () => {
                             <h4 className=" border-bottom">Your Profile</h4>
                             <div className="d-flex align-items-start py-3 border-bottom">
                                 <Image
-                                    src="/images/background1.jpg"
+                                    src={currentUser.avatar}
                                     className={styles.img}
                                     alt="your avatar"
                                     width={AVATAR_WIDTH}

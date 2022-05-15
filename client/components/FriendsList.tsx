@@ -65,7 +65,6 @@ const FriendsList = (props:propsType) => {
                 <input type="text" placeholder="Search for a friend" onChange={(e)=>handleOnChange(e)}/>
             </div>
             {friends.map((friend,index)=>{
-                friend.avatar = "/images/Ingénierieiconfinder_anime_spirited_away_no_face_nobody_4043233.png"
                 return (
                     <Friend  
                     setSelectedFriend={props.setSelectedFriend} 

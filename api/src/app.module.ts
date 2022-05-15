@@ -9,10 +9,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type:'mongodb',
-      host: 'localhost',
-      port: 27017,
-      database:'the-linker', 
+      type: 'mongodb',
+      host: process.env.MONGODB_HOST,
+      port: parseInt(process.env.MONGODB_PORT),
+      database: process.env.MONGODB_DATABASE, 
       autoLoadEntities: true,
       synchronize: true,
       entities: ["dist/**/*.entity{.ts,.js}"]

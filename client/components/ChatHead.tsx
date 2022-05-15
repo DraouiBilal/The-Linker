@@ -11,7 +11,8 @@ interface propsType {
 
 const ChatHead = (props:propsType) => {
     const {user,online} = props
-
+    console.log(user);
+    
     return (
         <div className={styles.chate_header}>
             <div className={styles.header_content}>
