@@ -29,7 +29,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   afterInit() {
     this.socketToUser = {}
     this.secrets = {}
-    const RSAKey = cryptico.generateRSAKey(process.env.AES_SECRET, 1024)
+    const RSAKey = cryptico.generateRSAKey(process.env.RSA_SECRET, 1024)
     this.keys = {
       privateKey: RSAKey,
       publicKey: cryptico.publicKeyString(RSAKey),
