@@ -30,9 +30,7 @@ const Friend = ({ avatar, username, id }: FriendProps) => {
         <>
             <div className="card h-100">
                 <Image
-                    src={`/images/image${
-                        Math.floor(Math.random() * 3) + 1
-                    }.jpg`}
+                    src={avatar}
                     className="card-img-top rounded-bottom rounded-3"
                     alt="..."
                     width={AVATAR_WIDTH}
