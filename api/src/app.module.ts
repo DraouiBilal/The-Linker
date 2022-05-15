@@ -10,11 +10,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mongodb',
-      host: process.env.MONGODB_HOST,
-      port: parseInt(process.env.MONGODB_PORT),
-      database: process.env.MONGODB_DATABASE, 
+      url:process.env.MONGODB_URL,
       autoLoadEntities: true,
       synchronize: true,
+      useUnifiedTopology: true,
       entities: ["dist/**/*.entity{.ts,.js}"]
     }),
     NeodeModule.forRoot(),
