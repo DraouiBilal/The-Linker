@@ -5,6 +5,7 @@ import { UserInterface } from 'src/auth/interfaces/user.interfaces';
 
 @Injectable()
 export class UsersService {
+  [x: string]: any;
     
     constructor(
         @Inject('Connection') private readonly neode: Neode
@@ -97,7 +98,31 @@ export class UsersService {
         
     }
 
+    async getUserFromUsername(username: string): Promise<Neode.Node<UserInterface>>{
+        try {
+            const user:Neode.Node<UserInterface> = await this.neode.first('User','username',username)  
+            
+            if(!user)
+                throw new NotFoundException("User not found")
+            return user
+        } catch (err: unknown) {
+            console.error(err)
+            throw new InternalServerErrorException('Server Error')
+        }
+    }
 
+    async getUserFromID(id: string): Promise<Neode.Node<UserInterface>>{
+        try {
+            const user:Neode.Node<UserInterface> = await this.neode.first('User','id',id) 
+
+            if(!user)
+                throw new NotFoundException("User not found")
+            return user
+        } catch (err: unknown) {
+            console.error(err)
+            throw new InternalServerErrorException('Server Error')
+        }
+    }
 
     async removeRequest(userNode:Neode.Node<UserInterface>, id:string):Promise<void>{
         let otherUser: Neode.Node<UserInterface>

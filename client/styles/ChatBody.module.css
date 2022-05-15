@@ -1,0 +1,42 @@
+
+.chate_body{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    min-height: 430px;
+    max-height: 430px;
+    height:430px;
+}
+
+.messag_box{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    
+}
+.message_box_aria{
+    width: 38%;
+    background: #fff;
+    position: absolute;
+    top: 83%;
+    border-radius: 30px;
+    box-shadow: 0px 7px 23px -8px rgba(204,202,204,1);
+}
+.message_box_aria input{
+    width: 90%;
+    height: 4rem;
+    border: none;
+    outline: none;
+    background: none;
+    margin-left: 20px;
+}
+.message_box_aria input::placeholder{
+    color: gray;
+}
+.message_box_aria i{
+    color: gray;
+    cursor: pointer;
+}
