@@ -17,6 +17,9 @@ import {
 import Alert from "../utils/Alert";
 
 const Home = () => {
+
+    const router = useRouter()
+
     const [tab, setTab] = useState<"NF" | "PI" | "PR" | "YF">("NF");
     const [newFriends, setNewFriends] = useState<FriendProps[]>([]);
     const [pendingInvitations, setPendingInvitations] = useState<
@@ -26,7 +29,7 @@ const Home = () => {
         PendingRequestProps[]
     >([]);
     const [yourFriends, setYourFriends] = useState<YourFriendProps[]>([]);
-    const router = useRouter();
+
     const NF = createRef<HTMLParagraphElement>();
     const PI = createRef<HTMLParagraphElement>();
     const PR = createRef<HTMLParagraphElement>();
@@ -54,6 +57,9 @@ const Home = () => {
             }
         });
     };
+
+
+
     const handleNavClick = (currentTab: "NF" | "PI" | "PR" | "YF") => {
         switch (currentTab) {
             case "NF":
@@ -166,6 +172,8 @@ const Home = () => {
         return false;
     };
     useEffect(() => {
+        if(!localStorage.getItem("accessToken"))
+            router.push('/')
         switch (tab) {
             case "NF":
                 getNewFriends().then((status) => {

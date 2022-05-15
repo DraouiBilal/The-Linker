@@ -12,12 +12,15 @@ import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Alert from "../utils/Alert";
 import Head from "next/head";
+import Link from "next/link";
 
 const Profile = () => {
+
     const AVATAR_WIDTH: number = 50;
     const AVATAR_HEIGHT: number = 50;
     const router = useRouter();
 
+    
     const [currentUser, setCurrentUser] = useState<User>({
         id: "",
         lastname: "",
@@ -73,6 +76,7 @@ const Profile = () => {
         <>
             <Head>
                 <title>The-Linker | Profile</title>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
             </Head>
             <main className={styles.mainProfile}>
                 <div className={styles.box}>
@@ -173,6 +177,10 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className={styles.navigation_buttons}>
+                        <Link href="/chat" ><span className={styles.navigation_button}><i className="fa-solid fa-arrow-left"/> Back to chat</span></Link>
+                        <Link href="/home" ><span className={styles.navigation_button}>Go to Home Page <i className="fa-solid fa-arrow-right"/> </span></Link>
                     </div>
                 </div>
             </main>

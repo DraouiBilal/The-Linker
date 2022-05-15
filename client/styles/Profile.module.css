@@ -103,3 +103,22 @@
         line-height: 18px;
     }
 }
+
+.navigation_buttons{
+    position: absolute;
+    bottom: 25%;
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+    padding: 0 70px;
+}
+
+.navigation_button{
+    color: #0779e4;
+    cursor: pointer;
+}
+
+.navigation_button:hover{
+    color: #0779e4;
+    text-decoration: underline;
+}

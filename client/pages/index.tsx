@@ -22,6 +22,8 @@ const Home: NextPage = () => {
 
     const router = useRouter();
 
+    
+
     const [signInCredentials, setSingInCredentials] =
         useState<signInCredentialsDTO>({ email: "", password: "" });
     const [signUpCredentials, setSingUpCredentials] =
@@ -85,6 +87,8 @@ const Home: NextPage = () => {
     };
     useEffect(() => {
         handleIndexPageDOM(styles);
+        if(localStorage.getItem('accessToken'))
+            router.push('/chat')
     }, []);
     return (
         <>

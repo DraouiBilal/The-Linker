@@ -47,6 +47,7 @@ const chat = ( ) => {
                 user.avatar = "/images/iconfinder_anime_spirited_away_no_face_nobody_4043233.png"
               return user;
           } else {
+              router.push('/')
               return null;
           }
       };
