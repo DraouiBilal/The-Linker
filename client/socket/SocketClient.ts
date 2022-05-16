@@ -5,7 +5,7 @@ class SocketClient {
     private static socket: Socket | null = null;
 
     private static connectSocket = function (id: string) {
-        return io(`ws://localhost:5001/chat`, {
+        return io(`${API.BASE_CHAT_URL}/chat`, {
             query: {
                 id,
                 token: localStorage.getItem("accessToken"),

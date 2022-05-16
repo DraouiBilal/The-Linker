@@ -15,7 +15,7 @@ import { SendAesSecretDto } from './dto/send-aes-secret.dto';
 import * as CryptoJS from 'crypto-js'
 
 @UseGuards(WsGuard)
-@WebSocketGateway(5001, { namespace: 'chat',cors:'*' })
+@WebSocketGateway({ namespace: 'chat',cors:'*' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit{
   private socketToUser:any
   private secrets:any
