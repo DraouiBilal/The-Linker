@@ -42,7 +42,6 @@ const Profile = () => {
             }
         };
         callAPI().then((user) => {
-            console.log("user is ", user?.avatar);
             if (user) {
                 setCurrentUser(user);
                 setLoading(false);

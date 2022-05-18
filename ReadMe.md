@@ -40,6 +40,10 @@ to install all the dependencies
 
 for the api folder add a .env file where you should specify the following environment variables:
 
+># port  
+>
+>PORT=***\<YOUR_PORT\>***
+>
 ># neo4j configuration 
 >
 >NEO4J_PROTOCOL=neo4j
@@ -57,21 +61,22 @@ for the api folder add a .env file where you should specify the following enviro
 >NEO4J_ENCRYPTION=ENCRYPTION_OFF
 >
 >
+># mongodb configuration
+>
+>MONGODB_URL=***\<YOUR_MONGODB_URL\>***
+>
+>
 ># jwt secret 
 >
 >JWT_SECRET= ***\<YOUR_JWT_SECRET\>***
 >
-># mongodb configuration
->
->MONGODB_HOST=***\<YOUR_MONGODB_HOST\>***
->
->MONGODB_PORT=***\<YOUR_MONGODB_PORT\>***
->
->MONGODB_DATABASE=***\<YOUR_MONGODB_DATABASE>***
->
->#rsa secret
+># rsa secret
 >
 >RSA_SECRET=***\<YOUR_RSA_SECRET\>*** (used to generate rsa key pair)
+>
+># aes secret
+>
+>AES_SECRET=***\<YOUR_AES_SECRET\>*** 
 
 ### Then Start Neo4j and Mongo DB servers
 
