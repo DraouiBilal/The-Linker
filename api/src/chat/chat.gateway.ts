@@ -107,12 +107,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   ): Promise<void> {
 
     let plaintext
-    
-    
+    plaintext = CryptoJS.AES.decrypt(sendMessageDto.message, this.secrets[userNode.properties().id]).toString(CryptoJS.enc.Utf8)
+
     if(this.socketToUser[sendMessageDto.to] && this.secrets[sendMessageDto.to]){
-      
-      plaintext = CryptoJS.AES.decrypt(sendMessageDto.message, this.secrets[userNode.properties().id]).toString(CryptoJS.enc.Utf8)
-      
       const newMessage = CryptoJS.AES.encrypt(plaintext,this.secrets[sendMessageDto.to]).toString();
       this.socketToUser[sendMessageDto.to].emit("message",{
         from:userNode.properties().id,
@@ -123,7 +120,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
     try{
       const user:UserInterface = await userNode.toJson()
-      await this.chatRepository.createMessage({...sendMessageDto,message:plaintext},user)
+      const storedMessage = CryptoJS.AES.encrypt(plaintext,process.env.AES_SECRET).toString();
+      await this.chatRepository.createMessage({...sendMessageDto,message:storedMessage},user)
     }catch(err: unknown) {
       throw new WsException('Unable to store message in database');
     }
@@ -134,8 +132,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       @ConnectedSocket() client: Socket,
       @MessageBody() getMessageDto: GetMessagesDto,
       @GetUser() userNode:Neode.Node<UserInterface>
-  ): Promise<void>{
-    const messages = await this.chatRepository.getMessages(userNode,getMessageDto)
+  ): Promise<void>{    
+    const encryptedMessages = await this.chatRepository.getMessages(userNode,getMessageDto)
+    const messages = encryptedMessages.map(message => {
+      const plaintext = CryptoJS.AES.decrypt(message.message, process.env.AES_SECRET).toString(CryptoJS.enc.Utf8) 
+      console.log(plaintext);
+      
+      return {
+        ...message,
+        message: CryptoJS.AES.encrypt(plaintext,this.secrets[userNode.properties().id]).toString()
+      }
+    })
     client.emit("getMessages",{messages})
   }
 

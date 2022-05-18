@@ -42,7 +42,7 @@ export class ProfileService {
         }catch(err: unknown){
             if(err instanceof Neo4jError){
                 if(err.code === 'Neo.ClientError.Schema.ConstraintValidationFailed'){
-                    console.log(err);
+                    console.error(err);
                     
                     const user:Neode.Node<UserInterface> = await this.neode.first('User','email',updateProfileDto.email)
                     

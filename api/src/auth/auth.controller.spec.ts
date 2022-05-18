@@ -23,7 +23,6 @@ const deleteGoodUser = async () => {
   const goodUser:Neode.Node<UserInterface> = await instance.first('User','username','UserName')
   
   if(goodUser){
-    console.log("test");
     instance.delete(goodUser)
   }
 }

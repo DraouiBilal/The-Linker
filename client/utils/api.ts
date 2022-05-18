@@ -5,8 +5,8 @@ const BASE_API_URL = `https://the-linker.herokuapp.com`;
 const BASE_CHAT_URL = `ws://the-linker.herokuapp.com`;
 
 const API = {
-    BASE_API_URL,
-    BASE_CHAT_URL,
+    BASE_API_URL:"http://localhost:5000",
+    BASE_CHAT_URL:"ws://localhost:5000",
 };
 
 export default API;

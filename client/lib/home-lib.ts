@@ -119,7 +119,6 @@ export const sendFriendRequest = async (
                 headers: { Authorization: `Bearer ${accessToken}` },
             }
         );
-        console.log("response in sendFriendRequest", response);
         return true;
     } catch (error: unknown) {
         return false;

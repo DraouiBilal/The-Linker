@@ -86,7 +86,6 @@ export const validateUpdateForm = async (user: User) => {
                             ImageConverter.ConvertToString(avatar[0]);
                     }
 
-                    console.log("avatar to update", updateProfileDto.avatar);
                     return updateProfileDto;
                 }
             }
@@ -118,7 +117,6 @@ export const updateProfile = async (
                 headers: { Authorization: `Bearer ${accessToken}` },
             }
         );
-        console.log("response", response.data.user);
         return {
             user: response.data.user,
             errors: [],

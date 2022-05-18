@@ -23,6 +23,8 @@ const ChatBody = (props:propsType) => {
 
     const lastMessage = useRef<HTMLDivElement>(null)
 
+    
+
     const onSubmitHandler = (e:FormEvent) => {
         e.preventDefault()
         if(message.length > 0){
@@ -41,7 +43,6 @@ const ChatBody = (props:propsType) => {
     }
 
     useEffect(()=>{
-        console.log(props.secret);
         
         props.socket.on("message",(data:MessageT) => {
             const plaintext = CryptoJS.AES.decrypt(data.message, props.secret).toString(CryptoJS.enc.Utf8)
@@ -51,8 +52,15 @@ const ChatBody = (props:propsType) => {
             setMessages(messagesRef.current);
         })
         
-        props.socket.on("getMessages",(data:{messages:MessageT[]})=>{
-            messagesRef.current = data.messages
+        props.socket.on("getMessages",(data:{messages:MessageT[]})=>{  
+                      
+            messagesRef.current = data.messages.map(message=>{
+                const plaintext = CryptoJS.AES.decrypt(message.message,props.secret).toString(CryptoJS.enc.Utf8)                
+                return {
+                    ...message,
+                    message: plaintext
+                }
+            })            
             setMessages(messagesRef.current)
         })
     },[])
