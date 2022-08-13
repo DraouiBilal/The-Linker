@@ -136,7 +136,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     const encryptedMessages = await this.chatRepository.getMessages(userNode,getMessageDto)
     const messages = encryptedMessages.map(message => {
       const plaintext = CryptoJS.AES.decrypt(message.message, process.env.AES_SECRET).toString(CryptoJS.enc.Utf8) 
-      console.log(plaintext);
       
       return {
         ...message,
